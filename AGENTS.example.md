@@ -18,6 +18,23 @@ Use the `reviewer` subagent at the end of implementation work to critique the re
 
 Skip `reviewer` only for very small changes, such as a 1-2 file edit with only a few changed lines and no meaningful behavioral risk.
 
+Default to a single-agent workflow for implementation.
+
+The main agent may spawn an additional subagent only when all of these are true:
+
+- the task has a clearly separable part that can run in parallel
+- the delegated work is bounded and concrete
+- the subagent will not block the main agent's immediate next step
+- the write scope is disjoint, or the work is read-only
+- the expected speedup is worth the extra token cost
+
+Do not create subagent teams by default.
+Do not spawn subagents for simple tasks.
+Avoid spawning subagents for routine exploration unless the exploration is large enough to benefit from being parallelized or isolated.
+Prefer at most one implementation helper at a time unless the task naturally splits into multiple independent areas.
+Subagents must not update `.ai/*`; only the main agent writes memory files.
+If a subagent produces or materially informs implementation work, the main agent must inspect and integrate that work, then run `reviewer` on the resulting change before considering the task done.
+
 ## Project Overview
 
 Describe this repository in 2-5 lines.
